@@ -28,6 +28,84 @@ print("Welcome back to the UW Calculator")
 //: IMPORTANT: If any tests are commented out, you will be graded a zero (0)! You should never be in the habit of eliminating tests to make the code pass.
 //:
 class Calculator {
+    func add(lhs: Int, rhs: Int) -> Int {
+        return lhs+rhs
+    }
+    
+    func add(_ array: [Int]) -> Int {
+        var sum = 0
+        for num in array {
+            sum = sum + num
+        }
+        return sum
+    }
+    
+    func add(lhs: (Int, Int), rhs: (Int, Int)) -> (Int, Int) {
+        return (lhs.0 + rhs.0, rhs.1 + lhs.1)
+    }
+    
+    func add(lhs: [String: Int], rhs: [String: Int]) -> [String: Int] {
+        var result: [String: Int] = [:]
+        for key in lhs.keys {
+            result[key] = lhs[key]! + (rhs[key] ?? 0)
+        }
+        return result
+    }
+    
+    func subtract(lhs: Int, rhs: Int) -> Int {
+        return lhs-rhs
+    }
+    
+    func subtract(lhs: (Int, Int), rhs: (Int, Int)) -> (Int, Int) {
+        return (lhs.0 - rhs.0, lhs.1 - rhs.1)
+    }
+    
+    func subtract(lhs: [String: Int], rhs: [String: Int]) -> [String: Int] {
+        var result: [String: Int] = [:]
+        for (point, value) in lhs {
+            result[point] = lhs[point]! - (rhs[point] ?? 0)
+        }
+        return result
+    }
+    
+    func multiply(lhs: Int, rhs: Int) -> Int {
+        return lhs*rhs
+    }
+    
+    func multiply(_ array: [Int]) -> Int {
+        var sum = 1
+        for num in array {
+            sum = sum * num
+        }
+        return sum
+    }
+    
+    func divide(lhs: Int, rhs: Int) -> Int {
+        return lhs/rhs
+    }
+    
+    func mathOp(lhs: Int, rhs: Int, op:(Int, Int) -> Int) -> Int {
+        return op(lhs, rhs)
+    }
+    
+    func mathOp(args: [Int], beg: Int, op:(Int, Int) -> Int) -> Int {
+        var result = beg
+        for num in args {
+            result = op(result, num)
+        }
+        return result
+    }
+    
+    func count(_ array: [Int]) -> Int {
+        return array.count
+    }
+    
+    func avg(_ array: [Int]) -> Int {
+        if array.isEmpty {
+            return 0
+        }
+        return add(array) / array.count
+    }
 }
 
 //: Don't change the name of this object (`calc`); it's used in all the tests.
@@ -43,7 +121,31 @@ let calc = Calculator()
 //: Keep in mind that writing new tests may reveal ambiguity in the specification above--if that's the case, document the ambiguity, declare what you think *should* happen, and write the test to test for it.
 
 // ===== Your tests go here
+// Negative Numbers
+calc.add(lhs: -2, rhs: -3) == -5
+calc.subtract(lhs: -5, rhs: -3) == -2
+calc.multiply(lhs: -3, rhs: 4) == -12
+calc.divide(lhs: -12, rhs: -3) == 4
 
+// Average of an Empty Array
+// Assuming avg([]) should return 0 or some error indication
+calc.avg([]) == 0 // or handle as special case
+
+// Add or Multiply with an Empty Array
+calc.add([]) == 0
+calc.multiply([]) == 1
+
+// Division by Zero - Assuming it should return some error code or exception
+// This case might need to modify the divide function to handle this gracefully
+
+// Adding/Subtracting Cartesian Points with Missing Coordinates
+calc.add(lhs: ["x": 5], rhs: ["y": 5]) == ["x": 5, "y": 5]
+calc.subtract(lhs: ["x": 5], rhs: ["y": 5]) == ["x": 5, "y": -5]
+
+// Operations on Arrays with a Single Element
+calc.add([5]) == 5
+calc.multiply([3]) == 3
+calc.avg([4]) == 4
 //: ---
 //: ## Test code block
 //: Do not modify the code in this section
@@ -52,7 +154,7 @@ calc.subtract(lhs: 2, rhs: 2) == 0
 calc.multiply(lhs: 2, rhs: 2) == 4
 calc.divide(lhs: 2, rhs: 2) == 1
 
-calc.mathOp(lhs: 5, rhs: 5, op: { (lhs: Int, rhs: Int) -> Int in (lhs + rjs) + (lhs * rhs) }) == 35
+calc.mathOp(lhs: 5, rhs: 5, op: { (lhs: Int, rhs: Int) -> Int in (lhs + rhs) + (lhs * rhs) }) == 35
     // This style is one way of writing an anonymous function
 calc.mathOp(lhs: 10, rhs: -5, op: { ($0 + $1) + ($0 - $1) }) == 20
     // This is the second, more terse, style; either works
